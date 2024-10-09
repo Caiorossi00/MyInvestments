@@ -22,13 +22,13 @@ def index():
 def mes(mes):
     ano_atual = datetime.now().year
     mes_nome = f"{get_mes_nome(mes)} {ano_atual}"
-    
+
     dados = investimentos.get(mes_nome, {
         'valor_inicial': 0.0,
         'rendimentos': 0.0,
         'aportes': [],
     })
-    
+
     total_aportes = sum(dados['aportes'])
 
     dados['aportes_com_indices'] = list(enumerate(dados['aportes']))
@@ -50,7 +50,9 @@ def add_aporte():
             'aportes': [valor],
         }
 
-    return redirect(url_for('mes', mes=mes.split()[0]))  
+    mes_numero = [i+1 for i, nome in enumerate(get_mes_nome(i+1) for i in range(12)) if nome in mes][0]
+
+    return redirect(url_for('mes', mes=mes_numero))
 
 @app.route('/remove_aporte', methods=['POST'])
 def remove_aporte():
@@ -61,7 +63,9 @@ def remove_aporte():
         valor_removido = investimentos[mes]['aportes'].pop(index)
         investimentos[mes]['valor_inicial'] -= valor_removido
 
-    return redirect(url_for('mes', mes=mes.split()[0]))  # Redireciona para a rota do mês
+    mes_numero = [i+1 for i, nome in enumerate(get_mes_nome(i+1) for i in range(12)) if nome in mes][0]
+
+    return redirect(url_for('mes', mes=mes_numero))
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
