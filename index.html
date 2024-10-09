@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investimentos</title>
+</head>
+<body>
+    <h1>Resumo de Investimentos</h1>
+    
+    {% for mes, dados in investimentos.items() %}
+        <h2>{{ mes.capitalize() }}</h2>
+        <p>Valor Inicial: R$ {{ dados.valor_inicial }}</p>
+        <p>Rendimentos: R$ {{ dados.rendimentos }}</p>
+        <p>Aportes: R$ {{ sum(dados.aportes) if dados.aportes else 0 }}</p>
+        <ul>
+            {% for aporte in dados.aportes %}
+                <li>R$ {{ aporte }}</li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+    
+    <h2>Adicionar Mês</h2>
+    <form method="POST" action="/add_mes">
+        <label for="mes">Mês:</label>
+        <input type="text" name="mes" id="mes" required>
+        <button type="submit">Adicionar Mês</button>
+    </form>
+    
+    <h2>Adicionar Aporte</h2>
+    <form method="POST" action="/add_aporte">
+        <label for="mes">Mês:</label>
+        <select name="mes" id="mes">
+            {% for mes in investimentos.keys() %}
+                <option value="{{ mes }}">{{ mes.capitalize() }}</option>
+            {% endfor %}
+        </select>
+        <label for="valor">Valor:</label>
+        <input type="number" step="0.01" name="valor" id="valor" required>
+        <button type="submit">Adicionar Aporte</button>
+    </form>
+</body>
+</html>
